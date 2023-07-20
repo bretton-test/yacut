@@ -1,9 +1,15 @@
 import random
 import re
 
-from settings import (CHARACTERS, MAX_TRY_GEN_URL, MAX_USER_URL_LENGTH,
-                      SHORT_URL_LENGTH)
 from validators import url as url_validator
+
+from settings import (
+    CHARACTERS,
+    MAX_TRY_GEN_URL,
+    MAX_USER_URL_LENGTH,
+    SHORT_URL_LENGTH,
+    SHORT_URL_REGEXP,
+)
 from yacut.error_handlers import ShortUrlGenerationError
 
 
@@ -29,7 +35,7 @@ def validate_short_url(session, model, short_url, api=False):
     if len(short_url) > MAX_USER_URL_LENGTH:
         return 'Указано недопустимое имя для короткой ссылки'
 
-    if not re.match("^[A-Za-z0-9]*$", short_url):
+    if not re.match(SHORT_URL_REGEXP, short_url):
         return 'Указано недопустимое имя для короткой ссылки'
 
     if session.query(model).filter_by(short=short_url).first() is not None:

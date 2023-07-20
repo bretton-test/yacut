@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import jsonify, request, url_for
 from sqlalchemy.exc import IntegrityError
 
@@ -25,14 +27,19 @@ def add_url_map():
             url_map.short = short_url
         db.session.commit()
         short_link = url_for('index_view', _external=True) + url_map.short
-        return jsonify({'url': url, 'short_link': short_link}), 201
+        return (
+            jsonify({'url': url, 'short_link': short_link}),
+            HTTPStatus.CREATED,
+        )
     except (IntegrityError, ShortUrlGenerationError) as error:
-        raise InvalidAPIUsage(error, status_code=500)
+        raise InvalidAPIUsage(
+            error, status_code=HTTPStatus.INTERNAL_SERVER_ERROR
+        )
 
 
 @app.route('/api/id/<string:short_id>/', methods=('GET',))
 def get_url_for(short_id):
     url_map = URLMap.query.filter_by(short=short_id).first()
     if url_map is None:
-        raise InvalidAPIUsage('Указанный id не найден', 404)
-    return jsonify({'url': url_map.original}), 200
+        raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
+    return jsonify({'url': url_map.original}), HTTPStatus.OK

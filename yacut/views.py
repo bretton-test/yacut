@@ -1,7 +1,7 @@
 from flask import abort, flash, redirect, render_template, url_for
-from settings import MAIN_PAGE
 from sqlalchemy.exc import IntegrityError
 
+from settings import MAIN_PAGE
 from . import app, db
 from .error_handlers import ShortUrlGenerationError
 from .forms import YacutForm
@@ -37,7 +37,5 @@ def index_view():
 
 @app.route('/<string:s_url>', methods=('GET',))
 def redirection(s_url):
-    url_map = URLMap.query.filter_by(short=s_url).first()
-    if url_map:
-        return redirect(url_map.original)
-    abort(404)
+    url_map = URLMap.query.filter_by(short=s_url).first_or_404()
+    return redirect(url_map.original)
