@@ -1,0 +1,55 @@
+{% from "macros/fields.html" import render_text_field, render_error_flash %}
+
+{% extends 'base.html' %}
+{% block content %}
+ <main>
+    <section class="container my-5 px-4">
+      <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+      <p class="text-center my-4">
+        Создайте короткую ссылку автоматически или предложите свой вариант
+      </p>
+
+      <div class="container">
+        <div class="row my-3">
+          <div class="col-sm"></div>
+            <div class="col-sm">
+              <form method="POST" novalidate>
+                {{ form.csrf_token }}
+                  <div>
+                    {{ render_text_field(form.original_link) }}
+                    {{ render_text_field(form.custom_id) }}
+                  </div>
+                {{ form.submit(class="btn btn-primary") }}
+              </form>
+            </div>
+          <div class="col-sm"></div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row ">
+          <div class="col-sm"></div>
+            <div class="col-sm">
+              <p class="text-center">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+				  {% if messages %}
+					{% for category, message in messages %}
+					  {% if category == 'error' %}
+                        {{ render_error_flash(message) }}
+                      {% endif %}
+				    {% endfor %}
+				  {% endif %}
+				{% endwith %}
+              {% if result_url %}
+                Ваша новая ссылка готова:
+                <a href="{{ result_url }}">{{ result_url }}</a>
+              {% endif %}
+              </p>
+            </div>
+          <div class="col-sm"></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+{% endblock %}

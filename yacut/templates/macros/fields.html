@@ -1,0 +1,14 @@
+{% macro render_text_field(field) %}
+<div>
+    {{ field(class="form-control form-control-lg py-2 mb-3", placeholder=field.label.text) }}
+    {% if field.errors %}
+      {% for error in field.errors %}
+        <p><span style="color:red">{{ error }}</span></p>
+      {% endfor %}
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_error_flash(message) %}
+  <p><span style="color:red">{{ message }}</span></p>
+{% endmacro %}
