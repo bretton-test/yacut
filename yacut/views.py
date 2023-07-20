@@ -31,9 +31,7 @@ def index_view():
         db.session.commit()
         result_url = url_for('index_view', _external=True) + url_map.short
         return render_template(MAIN_PAGE, form=form, result_url=result_url)
-    except IntegrityError:
-        abort(500)
-    except ShortUrlGenerationError:
+    except (IntegrityError, ShortUrlGenerationError):
         abort(500)
 
 

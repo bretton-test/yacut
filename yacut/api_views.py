@@ -26,9 +26,7 @@ def add_url_map():
         db.session.commit()
         short_link = url_for('index_view', _external=True) + url_map.short
         return jsonify({'url': url, 'short_link': short_link}), 201
-    except IntegrityError as error:
-        raise InvalidAPIUsage(error, status_code=500)
-    except ShortUrlGenerationError as error:
+    except (IntegrityError, ShortUrlGenerationError) as error:
         raise InvalidAPIUsage(error, status_code=500)
 
 
