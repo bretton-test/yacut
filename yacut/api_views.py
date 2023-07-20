@@ -7,7 +7,7 @@ from .models import URLMap
 from .utils import get_or_create, validate_short_url, validate_url
 
 
-@app.route('/api/id/', methods=['POST'])
+@app.route('/api/id/', methods=('POST',))
 def add_url_map():
     data = request.get_json(silent=True)
     result = validate_url(data)
